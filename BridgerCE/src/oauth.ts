@@ -41,12 +41,52 @@ export async function authenticateUser(): Promise<void> {
         console.log("User Email:", userEmail);
         console.log("User Name:", userName);
         
-        // You can now use userEmail and userName for your application
-        // For example, store them or use them to send emails later
+        // Save user data to Chrome storage
+        const userData = {
+          email: userEmail,
+          name: userName,
+          token: token,
+          lastUpdated: new Date().toISOString()
+        };
+        
+        chrome.storage.local.set({ userData }, () => {
+          if (chrome.runtime.lastError) {
+            console.error("Error saving to storage:", chrome.runtime.lastError);
+          } else {
+            console.log("User data saved to Chrome storage successfully!");
+          }
+        });
         
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     });
   }
+
+// Function to retrieve stored user data
+export function getStoredUserData(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(['userData'], (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result.userData || null);
+      }
+    });
+  });
+}
+
+// Function to clear stored user data (for logout)
+export function clearStoredUserData(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.remove(['userData'], () => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        console.log("User data cleared from storage");
+        resolve();
+      }
+    });
+  });
+}
   

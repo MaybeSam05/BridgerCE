@@ -44,3 +44,6 @@ creds.json
 *.tmp
 *.temp
 .cache/
+
+# Mac
+*/.DS_Store

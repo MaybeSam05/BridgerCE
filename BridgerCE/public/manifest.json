@@ -23,7 +23,8 @@
       "service_worker": "service-worker.js"
     },
     "permissions": [
-      "identity"
+      "identity",
+      "storage"
     ],
     "host_permissions": [
       "https://www.googleapis.com/*",
