@@ -391,12 +391,14 @@ Now write the email based on the profiles above.`
               }
               
               const subject = parts[0].trim();
-              const body = parts[1].trim();
+              const rawBody = parts[1].trim();
+              const formattedBody = formatEmailBody(rawBody);
               
               console.log("Parsed subject:", subject);
-              console.log("Parsed body:", body);
+              console.log("Parsed body:", rawBody);
+              console.log("Formatted body:", formattedBody);
               
-              setEmailData({ subject, body });
+              setEmailData({ subject, body: formattedBody });
               setConnectionDataStatus("success");
               setConnectionDataMsg("Email generated successfully!");
               setIsComposingEmail(true);
@@ -494,6 +496,30 @@ Now write the email based on the profiles above.`
        setSendEmailStatus("error");
        setSendEmailMsg(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
      }
+  };
+
+  // Helper function to format email body with proper line breaks
+  const formatEmailBody = (body: string): string => {
+    let formattedBody = body;
+    
+    // Find the first comma and add newline after it
+    const firstCommaIndex = formattedBody.indexOf(',');
+    if (firstCommaIndex !== -1) {
+      formattedBody = formattedBody.substring(0, firstCommaIndex + 1) + '\n\n' + formattedBody.substring(firstCommaIndex + 1);
+    }
+    
+    // Find the last comma and add newline before and after it
+    const lastCommaIndex = formattedBody.lastIndexOf(',');
+    if (lastCommaIndex !== -1 && lastCommaIndex !== firstCommaIndex) {
+      // Get the word after the last comma
+      const afterComma = formattedBody.substring(lastCommaIndex + 1).trim();
+      const beforeComma = formattedBody.substring(0, lastCommaIndex);
+      
+      // Reconstruct with newlines around the last comma
+      formattedBody = beforeComma + '\n\n' + afterComma;
+    }
+    
+    return formattedBody;
   };
 
   // Handler to go back to main view
