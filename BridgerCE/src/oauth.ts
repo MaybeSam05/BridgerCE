@@ -10,7 +10,14 @@ export async function authenticateUser(): Promise<void> {
     
     console.log("Chrome extension APIs are available, proceeding with authentication...");
 
-    chrome.identity.getAuthToken({ interactive: true }, async (token) => {
+    chrome.identity.getAuthToken({ 
+      interactive: true,
+      scopes: [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile", 
+        "https://www.googleapis.com/auth/gmail.send"
+      ]
+    }, async (token) => {
       if (chrome.runtime.lastError || !token) {
         console.error("Auth Error:", chrome.runtime.lastError);
         return;
@@ -46,6 +53,7 @@ export async function authenticateUser(): Promise<void> {
           email: userEmail,
           name: userName,
           token: token,
+          userTXT: null, // Placeholder for userTXT
           lastUpdated: new Date().toISOString()
         };
         
@@ -64,7 +72,13 @@ export async function authenticateUser(): Promise<void> {
   }
 
 // Function to retrieve stored user data
-export function getStoredUserData(): Promise<any> {
+export function getStoredUserData(): Promise<{
+  email: string;
+  name: string;
+  token: string;
+  userTXT?: string;
+  lastUpdated: string;
+} | null> {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(['userData'], (result) => {
       if (chrome.runtime.lastError) {

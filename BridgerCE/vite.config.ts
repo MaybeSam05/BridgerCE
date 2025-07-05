@@ -17,6 +17,12 @@ export default defineConfig({
       closeBundle: () => {
         copyFileSync('service-worker.js', 'dist/service-worker.js');
       }
+    },
+    {
+      name: 'copy-content-script',
+      closeBundle: () => {
+        copyFileSync('contentScript.js', 'dist/contentScript.js');
+      }
     }
   ],
   build: {
