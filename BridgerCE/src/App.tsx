@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { config } from "./config";
 
 function App() {
+  // ... keep existing code (all state declarations and useEffect)
   const [userData, setUserData] = useState<{
     email: string;
     name: string;
@@ -40,6 +41,7 @@ function App() {
       });
   }, []);
 
+  // ... keep existing code (all handler functions - handleAuthClick, handleLogout, handleResetUserData, handleSetUserInfo, handleGetConnectionData, handleSendEmail, formatEmailBody, handleBackToMain)
   const handleAuthClick = () => {
     console.log("Button clicked!");
     console.log("Chrome object available:", typeof chrome !== 'undefined');
@@ -291,7 +293,7 @@ function App() {
               
               const context_prompt = "\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.";
               
-                                           console.log("Sending request to ChatGPT API...");
+              console.log("Sending request to ChatGPT API...");
               console.log("Request payload:", {
                 model: config.CHATGPT_MODEL,
                 max_tokens: config.CHATGPT_MAX_TOKENS,
@@ -336,7 +338,7 @@ IMPORTANT FORMATTING INSTRUCTION:
 You must return your response in **this format only**:  
 subject line text here//email body text here
 
-Do NOT add any labels such as “subject:” or “body:”.  
+Do NOT add any labels such as "subject:" or "body:".  
 Do NOT add explanations, headers, or introductions.  
 Do NOT include anything before or after the response.  
 Do NOT wrap the response in quotes or code blocks.  
@@ -409,16 +411,16 @@ Now write the email based on the profiles above.`
                 setConnectionDataMsg("");
               }, 2000);
               
-                         } catch (error: unknown) {
-               console.error("ChatGPT API error:", error);
-               console.error("Error type:", typeof error);
-               console.error("Error constructor:", error?.constructor?.name);
-               if (error instanceof Error) {
-                 console.error("Error stack:", error.stack);
-               }
-               setConnectionDataStatus("error");
-               setConnectionDataMsg(`Failed to generate email: ${error instanceof Error ? error.message : 'Unknown error'}`);
-             }
+            } catch (error: unknown) {
+              console.error("ChatGPT API error:", error);
+              console.error("Error type:", typeof error);
+              console.error("Error constructor:", error?.constructor?.name);
+              if (error instanceof Error) {
+                console.error("Error stack:", error.stack);
+              }
+              setConnectionDataStatus("error");
+              setConnectionDataMsg(`Failed to generate email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            }
           });
         }, 500);
       });
@@ -463,7 +465,7 @@ Now write the email based on the profiles above.`
         .replace(/\//g, '_')
         .replace(/=+$/, '');
       
-             const response = await fetch(config.GMAIL_API_URL, {
+      const response = await fetch(config.GMAIL_API_URL, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -491,11 +493,11 @@ Now write the email based on the profiles above.`
         setSendEmailMsg("");
       }, 2000);
       
-         } catch (error: unknown) {
-       console.error("Send email error:", error);
-       setSendEmailStatus("error");
-       setSendEmailMsg(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
-     }
+    } catch (error: unknown) {
+      console.error("Send email error:", error);
+      setSendEmailStatus("error");
+      setSendEmailMsg(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   // Helper function to format email body with proper line breaks
@@ -532,407 +534,303 @@ Now write the email based on the profiles above.`
   };
 
   return (
-    <div style={{ minHeight: "300px", minWidth: "320px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "none", padding: 0 }}>
-      {!userData ? (
-        <>
-          {/* Logo at the top */}
-          <div style={{ marginBottom: "24px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <img 
-              src={textNoBG} 
-              alt="Bridger Logo" 
-              style={{ width: "120px", height: "auto", marginBottom: "8px" }} 
-            />
-            <p style={{ fontSize: "14px", color: "#666", margin: 0, fontStyle: "italic" }}>
-              LinkedIn Automation Tool
-            </p>
+    <div className="min-h-[350px] min-w-[380px] h-full w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200/30 to-indigo-300/30 rounded-full blur-xl transform translate-x-16 -translate-y-16"></div>
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-200/20 to-pink-200/20 rounded-full blur-lg transform -translate-x-12 translate-y-12"></div>
+      
+      <div className="relative z-10 p-6">
+        {!userData ? (
+          <div className="flex flex-col items-center justify-center text-center space-y-6">
+            {/* Logo Section */}
+            <div className="space-y-3">
+              <div className="w-36 h-20 mx-auto relative">
+                <img 
+                  src={textNoBG} 
+                  alt="Bridger Logo" 
+                  className="w-full h-full object-contain drop-shadow-sm" 
+                />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-slate-700">
+                  LinkedIn Automation Tool
+                </p>
+                <p className="text-xs text-slate-500">
+                  Connect smarter, not harder
+                </p>
+              </div>
+            </div>
+            
+            {/* Sign In Button */}
+            <button
+              onClick={handleAuthClick}
+              className="group relative bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3.5 px-6 rounded-full border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 ease-out transform hover:scale-105 flex items-center gap-3 min-w-[200px] justify-center"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <img className="w-5 h-5 relative z-10" src={googleLogo} alt="Google" />
+              <span className="relative z-10">Sign in with Google</span>
+            </button>
           </div>
-          {/* Sign in button (user's custom style) */}
-          <button
-            onClick={handleAuthClick}
-            style={{
-              padding: 10,
-              backgroundColor: "#f2f2f2",
-              color: "black",
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              borderRadius: "40px",
-              fontSize: "12px",
-              border: "none",
-              margin: 0
-            }}
-          >
-            <img style={{ width: 20, height: 20 }} src={googleLogo} alt="google" />
-            Sign in with Google
-          </button>
-        </>
-      ) : isComposingEmail ? (
-        // Email Composition Interface
-        <div style={{ 
-          textAlign: "center", 
-          width: "100%", 
-          display: "flex", 
-          flexDirection: "column", 
-          alignItems: "center",
-          padding: "16px",
-          background: "white",
-          minHeight: "400px"
-        }}>
-          {/* Logo */}
-          <img 
-            src={textNoBG} 
-            alt="Bridger Logo" 
-            style={{ width: "60px", height: "auto", marginBottom: "12px" }} 
-          />
-          
-          <h3 style={{ 
-            margin: "0 0 16px 0", 
-            color: "#333",
-            fontSize: "16px",
-            fontWeight: "600"
-          }}>
-            Compose Email
-          </h3>
-
-          {/* Email Form */}
-          <div style={{ 
-            width: "100%", 
-            display: "flex", 
-            flexDirection: "column", 
-            gap: "12px"
-          }}>
-            {/* Email Address */}
-            <div>
-              <label style={{ 
-                display: "block", 
-                fontSize: "12px", 
-                color: "#666", 
-                marginBottom: "4px",
-                textAlign: "left"
-              }}>
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={emailAddress}
-                onChange={(e) => setEmailAddress(e.target.value)}
-                placeholder="Enter recipient's email"
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                  boxSizing: "border-box",
-                  backgroundColor: "white",
-                  color: "#333"
-                }}
-              />
+        ) : isComposingEmail ? (
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="text-center space-y-3">
+              <div className="w-20 h-12 mx-auto">
+                <img 
+                  src={textNoBG} 
+                  alt="Bridger Logo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h2 className="text-lg font-semibold text-slate-800">Compose Email</h2>
+              </div>
             </div>
 
-            {/* Subject */}
-            <div>
-              <label style={{ 
-                display: "block", 
-                fontSize: "12px", 
-                color: "#666", 
-                marginBottom: "4px",
-                textAlign: "left"
-              }}>
-                Subject
-              </label>
-              <input
-                type="text"
-                value={emailData?.subject || ""}
-                onChange={(e) => setEmailData(prev => prev ? {...prev, subject: e.target.value} : null)}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                  boxSizing: "border-box",
-                  backgroundColor: "white",
-                  color: "#333"
-                }}
-              />
-            </div>
+            {/* Email Form */}
+            <div className="space-y-4">
+              {/* Email Address Field */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-700">
+                  Recipient Email
+                </label>
+                <input
+                  type="email"
+                  value={emailAddress}
+                  onChange={(e) => setEmailAddress(e.target.value)}
+                  placeholder="colleague@company.com"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm placeholder-gray-400 shadow-sm text-gray-900"
+                />
+              </div>
 
-            {/* Body */}
-            <div>
-              <label style={{ 
-                display: "block", 
-                fontSize: "12px", 
-                color: "#666", 
-                marginBottom: "4px",
-                textAlign: "left"
-              }}>
-                Message
-              </label>
-              <textarea
-                value={emailData?.body || ""}
-                onChange={(e) => setEmailData(prev => prev ? {...prev, body: e.target.value} : null)}
-                rows={6}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                  boxSizing: "border-box",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                  backgroundColor: "white",
-                  color: "#333"
-                }}
-              />
+              {/* Subject Field */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-700">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  value={emailData?.subject || ""}
+                  onChange={(e) => setEmailData(prev => prev ? {...prev, subject: e.target.value} : null)}
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm shadow-sm text-gray-900"
+                />
+              </div>
+
+              {/* Message Field */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-700">
+                  Message
+                </label>
+                <textarea
+                  value={emailData?.body || ""}
+                  onChange={(e) => setEmailData(prev => prev ? {...prev, body: e.target.value} : null)}
+                  rows={5}
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm resize-none shadow-sm placeholder-gray-400 text-gray-900"
+                  placeholder="Your personalized message will appear here..."
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={handleSendEmail}
+                  disabled={sendEmailStatus === "loading"}
+                  className={`flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2 ${
+                    sendEmailStatus === "loading" 
+                      ? "bg-gray-400 cursor-not-allowed" 
+                      : sendEmailStatus === "success"
+                        ? "bg-green-500 hover:bg-green-600"
+                        : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                  } text-white`}
+                >
+                  {sendEmailStatus === "loading" && (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  )}
+                  {sendEmailStatus === "success" && (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  {sendEmailStatus === "loading" ? "Sending..." : 
+                   sendEmailStatus === "success" ? "Sent!" : "Send Email"}
+                </button>
+                
+                <button
+                  onClick={handleBackToMain}
+                  className="px-4 py-3 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Status Message */}
+              {sendEmailMsg && (
+                <div className={`p-3 rounded-xl text-sm flex items-center gap-2 ${
+                  sendEmailStatus === "error" 
+                    ? "bg-red-50 text-red-700 border border-red-200" 
+                    : "bg-green-50 text-green-700 border border-green-200"
+                }`}>
+                  {sendEmailStatus === "error" ? (
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  {sendEmailMsg}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Header Section */}
+            <div className="text-center space-y-4">
+              <div className="w-24 h-14 mx-auto">
+                <img 
+                  src={textNoBG} 
+                  alt="Bridger Logo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
+              
+              {/* User Profile Card */}
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="font-semibold text-slate-800 text-sm">
+                      {userData.name}
+                    </h3>
+                    <p className="text-xs text-slate-600 truncate">
+                      {userData.email}
+                    </p>
+                  </div>
+                  <div className="w-2 h-2 bg-green-400 rounded-full shadow-sm"></div>
+                </div>
+              </div>
             </div>
 
             {/* Action Buttons */}
-            <div style={{ 
-              display: "flex", 
-              gap: "8px",
-              marginTop: "8px"
-            }}>
+            <div className="space-y-3">
               <button
-                onClick={handleSendEmail}
-                disabled={sendEmailStatus === "loading"}
-                style={{
-                  flex: 1,
-                  padding: "8px 16px",
-                  background: sendEmailStatus === "success" ? "#4caf50" : "#1a70a1",
-                  color: "white",
-                  fontWeight: "500",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                  border: "none",
-                  cursor: sendEmailStatus === "loading" ? "not-allowed" : "pointer",
-                  opacity: sendEmailStatus === "loading" ? 0.7 : 1
-                }}
+                onClick={hasUserTXT ? handleResetUserData : handleSetUserInfo}
+                disabled={setUserInfoStatus === "success"}
+                className={`w-full py-3.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2 ${
+                  setUserInfoStatus === "success" 
+                    ? "bg-green-500 text-white cursor-default" 
+                    : hasUserTXT 
+                      ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white"
+                      : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
+                }`}
               >
-                {sendEmailStatus === "loading" ? "Sending..." : 
-                 sendEmailStatus === "success" ? "Sent!" : "Send Email"}
-              </button>
-              
-              <button
-                onClick={handleBackToMain}
-                style={{
-                  padding: "8px 12px",
-                  background: "transparent",
-                  color: "#666",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "12px"
-                }}
-              >
-                Back
-              </button>
-            </div>
-
-            {/* Status Messages */}
-            {sendEmailMsg && (
-              <div style={{ 
-                color: sendEmailStatus === "error" ? "#dc3545" : "#4caf50", 
-                fontSize: "10px", 
-                padding: "4px 8px",
-                background: sendEmailStatus === "error" ? "rgba(220, 53, 69, 0.1)" : "rgba(76, 175, 80, 0.1)",
-                borderRadius: "4px",
-                maxWidth: "200px",
-                wordWrap: "break-word"
-              }}>
-                {sendEmailMsg}
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        // Main Interface
-        <div style={{ 
-          textAlign: "center", 
-          width: "100%", 
-          display: "flex", 
-          flexDirection: "column", 
-          alignItems: "center",
-          padding: "16px",
-          background: "white",
-          minHeight: "200px"
-        }}>
-          {/* Logo */}
-          <img 
-            src={textNoBG} 
-            alt="Bridger Logo" 
-            style={{ width: "80px", height: "auto", marginBottom: "16px" }} 
-          />
-          
-          {/* User Info */}
-          <div style={{
-            marginBottom: "16px",
-            textAlign: "center"
-          }}>
-            <h3 style={{ 
-              margin: "0 0 4px 0", 
-              color: "#333",
-              fontSize: "14px",
-              fontWeight: "600"
-            }}>
-              {userData.name}
-            </h3>
-            
-            <p style={{ 
-              margin: "0", 
-              color: "#666",
-              fontSize: "11px"
-            }}>
-              {userData.email}
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div style={{ 
-            width: "100%", 
-            display: "flex", 
-            flexDirection: "column", 
-            alignItems: "center",
-            gap: "8px"
-          }}>
-            <button
-              onClick={hasUserTXT ? handleResetUserData : handleSetUserInfo}
-              style={{
-                padding: "8px 16px",
-                background: setUserInfoStatus === "success" ? "#4caf50" : hasUserTXT ? "#dc3545" : "#1a70a1",
-                color: "white",
-                fontWeight: "500",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                borderRadius: "6px",
-                fontSize: "12px",
-                border: "none",
-                cursor: "pointer",
-                minWidth: "120px",
-                justifyContent: "center",
-                transition: "all 0.2s ease"
-              }}
-              onMouseEnter={(e) => {
-                if (setUserInfoStatus !== "success") {
-                  e.currentTarget.style.background = hasUserTXT ? "#c82333" : "#155a7a";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (setUserInfoStatus !== "success") {
-                  e.currentTarget.style.background = hasUserTXT ? "#dc3545" : "#1a70a1";
-                }
-              }}
-              disabled={setUserInfoStatus === "success"}
-            >
-              {setUserInfoStatus === "success" ? (
-                <>
-                  <span style={{ fontSize: "12px" }}>✓</span>
-                  Saved
-                </>
-              ) : hasUserTXT ? (
-                "Reset user data"
-              ) : (
-                "Set Info"
-              )}
-            </button>
-            
-            {/* Get Connection Data Button - only show when user has data */}
-            {hasUserTXT && (
-              <button
-                onClick={handleGetConnectionData}
-                disabled={connectionDataStatus === "loading"}
-                style={{
-                  padding: "8px 16px",
-                  background: connectionDataStatus === "success" ? "#4caf50" : "#28a745",
-                  color: "white",
-                  fontWeight: "500",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  border: "none",
-                  cursor: connectionDataStatus === "loading" ? "not-allowed" : "pointer",
-                  minWidth: "120px",
-                  justifyContent: "center",
-                  transition: "all 0.2s ease",
-                  opacity: connectionDataStatus === "loading" ? 0.7 : 1
-                }}
-                onMouseEnter={(e) => {
-                  if (connectionDataStatus !== "success" && connectionDataStatus !== "loading") {
-                    e.currentTarget.style.background = "#218838";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (connectionDataStatus !== "success") {
-                    e.currentTarget.style.background = "#28a745";
-                  }
-                }}
-              >
-                {connectionDataStatus === "loading" ? (
+                {setUserInfoStatus === "success" ? (
                   <>
-                    <span style={{ fontSize: "12px" }}>⏳</span>
-                    Processing...
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Profile Saved
                   </>
-                ) : connectionDataStatus === "success" ? (
+                ) : hasUserTXT ? (
                   <>
-                    <span style={{ fontSize: "12px" }}>✓</span>
-                    Generated!
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reset Profile Data
                   </>
                 ) : (
-                  "Get Connection Data"
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Set Profile Info
+                  </>
                 )}
               </button>
-            )}
-            
-            {/* Status Messages */}
-            {(setUserInfoMsg || connectionDataMsg) && (
-              <div style={{ 
-                color: (setUserInfoStatus === "error" || connectionDataStatus === "error") ? "#dc3545" : 
-                       (setUserInfoStatus === "notLinkedIn" || connectionDataStatus === "notLinkedIn") ? "#ff9800" : "#4caf50", 
-                fontSize: "10px", 
-                padding: "4px 8px",
-                background: (setUserInfoStatus === "error" || connectionDataStatus === "error") ? "rgba(220, 53, 69, 0.1)" : 
-                           (setUserInfoStatus === "notLinkedIn" || connectionDataStatus === "notLinkedIn") ? "rgba(255, 152, 0, 0.1)" : "rgba(76, 175, 80, 0.1)",
-                borderRadius: "4px",
-                maxWidth: "200px",
-                wordWrap: "break-word"
-              }}>
-                {setUserInfoMsg || connectionDataMsg}
-              </div>
-            )}
-            
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: "6px 12px",
-                background: "transparent",
-                color: "#666",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "10px",
-                fontWeight: "400",
-                transition: "all 0.2s ease",
-                marginTop: "4px"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#f5f5f5";
-                e.currentTarget.style.borderColor = "#ccc";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.borderColor = "#ddd";
-              }}
-            >
-              Logout
-            </button>
+              
+              {hasUserTXT && (
+                <button
+                  onClick={handleGetConnectionData}
+                  disabled={connectionDataStatus === "loading"}
+                  className={`w-full py-3.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2 ${
+                    connectionDataStatus === "loading" 
+                      ? "bg-gray-400 cursor-not-allowed" 
+                      : connectionDataStatus === "success"
+                        ? "bg-green-500"
+                        : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700"
+                  } text-white`}
+                >
+                  {connectionDataStatus === "loading" && (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  )}
+                  {connectionDataStatus === "success" && (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  {!connectionDataStatus && (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  )}
+                  
+                  {connectionDataStatus === "loading" ? "Analyzing Profiles..." :
+                   connectionDataStatus === "success" ? "Email Generated!" : "Generate Connection Email"}
+                </button>
+              )}
+              
+              {/* Status Messages */}
+              {(setUserInfoMsg || connectionDataMsg) && (
+                <div className={`p-3 rounded-xl text-xs flex items-start gap-2 shadow-sm ${
+                  (setUserInfoStatus === "error" || connectionDataStatus === "error") 
+                    ? "bg-red-50 text-red-700 border border-red-200" 
+                    : (setUserInfoStatus === "notLinkedIn" || connectionDataStatus === "notLinkedIn")
+                      ? "bg-amber-50 text-amber-700 border border-amber-200"
+                      : "bg-green-50 text-green-700 border border-green-200"
+                }`}>
+                  {(setUserInfoStatus === "error" || connectionDataStatus === "error") ? (
+                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  ) : (setUserInfoStatus === "notLinkedIn" || connectionDataStatus === "notLinkedIn") ? (
+                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  <span className="break-words leading-relaxed">
+                    {setUserInfoMsg || connectionDataMsg}
+                  </span>
+                </div>
+              )}
+              
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="w-full py-2.5 px-4 bg-white/50 hover:bg-white/70 text-slate-600 border border-slate-200 rounded-xl transition-all duration-200 text-xs font-medium shadow-sm backdrop-blur-sm"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
