@@ -25,6 +25,7 @@ function App() {
   const [isComposingEmail, setIsComposingEmail] = useState<boolean>(false);
   const [sendEmailStatus, setSendEmailStatus] = useState<null | "loading" | "success" | "error">(null);
   const [sendEmailMsg, setSendEmailMsg] = useState<string>("");
+  const [copyStatus, setCopyStatus] = useState<null | "success" | "error">(null);
 
   // Load stored user data when component mounts
   useEffect(() => {
@@ -533,6 +534,25 @@ Now write the email based on the profiles above.`
     setSendEmailMsg("");
   };
 
+  // Handler for copying email body to clipboard
+  const handleCopyToClipboard = async () => {
+    if (!emailData?.body) {
+      setCopyStatus("error");
+      setTimeout(() => setCopyStatus(null), 2000);
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(emailData.body);
+      setCopyStatus("success");
+      setTimeout(() => setCopyStatus(null), 2000);
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      setCopyStatus("error");
+      setTimeout(() => setCopyStatus(null), 2000);
+    }
+  };
+
   return (
     <div className="min-h-[350px] min-w-[380px] h-full w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       {/* Decorative background elements */}
@@ -626,13 +646,40 @@ Now write the email based on the profiles above.`
                 <label className="block text-sm font-medium text-slate-700">
                   Message
                 </label>
-                <textarea
-                  value={emailData?.body || ""}
-                  onChange={(e) => setEmailData(prev => prev ? {...prev, body: e.target.value} : null)}
-                  rows={5}
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm resize-none shadow-sm placeholder-gray-400 text-gray-900"
-                  placeholder="Your personalized message will appear here..."
-                />
+                <div className="relative">
+                  <textarea
+                    value={emailData?.body || ""}
+                    onChange={(e) => setEmailData(prev => prev ? {...prev, body: e.target.value} : null)}
+                    rows={5}
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm resize-none shadow-sm placeholder-gray-400 text-gray-900"
+                    placeholder="Your personalized message will appear here..."
+                  />
+                  <button
+                    onClick={handleCopyToClipboard}
+                    className={`absolute bottom-2 right-2 p-1.5 rounded-lg transition-all duration-200 ${
+                      copyStatus === "success" 
+                        ? "bg-green-500 text-white" 
+                        : copyStatus === "error"
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800"
+                    }`}
+                    title="Copy to clipboard"
+                  >
+                    {copyStatus === "success" ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : copyStatus === "error" ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
 
               {/* Action Buttons */}
