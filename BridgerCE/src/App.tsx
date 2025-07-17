@@ -27,6 +27,18 @@ function App() {
   const [sendEmailMsg, setSendEmailMsg] = useState<string>("");
   const [copyStatus, setCopyStatus] = useState<null | "success" | "error">(null);
 
+  // Settings state
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [outputLength, setOutputLength] = useState<number>(150);
+  const [tone, setTone] = useState<'neutral' | 'friendly' | 'professional'>('neutral');
+
+  // Prompts for each tone
+  const tonePrompts: Record<string, string> = {
+    neutral: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional but friendly and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Connecting Around HealthTech & Stanford//Hi Jamie, I saw we both worked in healthtech and studied at Stanford... \n\nNow generate the email based on the profiles provided.`,
+    friendly: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nYou're helping draft a warm, friendly, and approachable email for a 15-minute coffee chat. The tone should be upbeat, personable, and inviting, while still being respectful and professional. Use first names, express genuine interest, and make the recipient feel at ease. Keep it light and positive, and mention any shared interests or experiences early in the message. Avoid overly formal language, and aim for a conversational style.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone friendly, upbeat, and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Coffee Chat About Product Design//Hi Taylor, I noticed we both have a passion for product design and went to similar schools... \n\nNow generate the email based on the profiles provided.`,
+    professional: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nYou're helping draft a highly professional and respectful email for a 15-minute coffee chat. The tone should be formal, courteous, and focused on career development. Use full names, reference the recipient’s professional achievements, and maintain a clear, concise structure. Avoid casual language, and emphasize the value of learning from the recipient’s experience. The message should be polished and businesslike, while still expressing genuine interest in connecting.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a respectful, formal, and concise email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional, polished, and thoughtful — avoid anything generic or overly casual.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Professional Networking Opportunity//Dear Dr. Smith, I am reaching out after seeing your impressive work in... \n\nNow generate the email based on the profiles provided.`
+  };
+
   // Load stored user data when component mounts
   useEffect(() => {
     getStoredUserData()
@@ -292,7 +304,7 @@ function App() {
             try {
               setConnectionDataMsg("Generating email...");
               
-              const context_prompt = "\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.";
+              const context_prompt = tonePrompts[tone].replace('{clientTXT}', clientTXT);
               
               console.log("Sending request to ChatGPT API...");
               console.log("Request payload:", {
@@ -318,40 +330,10 @@ function App() {
                     },
                     {
                       role: "user",
-                      content: `You are a professional email assistant. I will give you two LinkedIn profiles: mine and one from a person I want to connect with.
-
-My LinkedIn Profile:
-${userTXT}
-
-Their LinkedIn Profile:
-${clientTXT}${context_prompt}
-
-Your task is to:
-1. Analyze both profiles
-2. Identify genuine points of connection (education, job roles, industries, locations, interests, etc.)
-3. Compose a short, warm, professional email requesting a 15-minute virtual coffee chat
-4. Be polite and authentic
-5. Mention connections early to establish rapport
-6. Keep it under 150 words
-7. Only use information from the profiles and provided context
-
-IMPORTANT FORMATTING INSTRUCTION:
-You must return your response in **this format only**:  
-subject line text here//email body text here
-
-Do NOT add any labels such as "subject:" or "body:".  
-Do NOT add explanations, headers, or introductions.  
-Do NOT include anything before or after the response.  
-Do NOT wrap the response in quotes or code blocks.  
-Failure to follow this format will result in the email being rejected.
-
-Example:  
-Connecting Around HealthTech & Stanford//Hi Jamie, I saw we both worked in healthtech and studied at Stanford...
-
-Now write the email based on the profiles above.`
+                      content: context_prompt
                     }
                   ],
-                  max_tokens: config.CHATGPT_MAX_TOKENS,
+                  max_tokens: Math.round(outputLength * 2), // rough estimate: 2 tokens per word
                   temperature: config.CHATGPT_TEMPERATURE
                 })
               });
@@ -559,6 +541,60 @@ Now write the email based on the profiles above.`
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-200/30 to-indigo-300/30 rounded-full blur-xl transform translate-x-16 -translate-y-16"></div>
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-200/20 to-pink-200/20 rounded-full blur-lg transform -translate-x-12 translate-y-12"></div>
       
+      {/* Settings Cog - Top Right */}
+      {userData && (
+        <div className="absolute top-4 right-4 z-30">
+          <button
+            onClick={() => setSettingsOpen((prev) => !prev)}
+            className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-all border border-gray-200"
+            title="Settings"
+          >
+            {/* Heroicons Cog6Tooth Outline */}
+            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+          </button>
+        </div>
+      )}
+      {/* Settings Panel - Centered in App */}
+      {userData && settingsOpen && (
+        <div className="absolute left-1/2 top-16 -translate-x-1/2 w-80 bg-white border border-gray-200 rounded-xl shadow-lg p-5 z-40">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-slate-700 mb-1">Output Length ({outputLength} words)</label>
+            <input
+              type="range"
+              min={150}
+              max={500}
+              value={outputLength}
+              onChange={e => setOutputLength(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Tone</label>
+            <div className="flex gap-1">
+              <button
+                className={`flex-1 py-2 text-xs rounded-lg font-semibold border transition-all duration-200 ${tone === 'friendly' ? 'bg-blue-100 border-blue-400 text-blue-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+                onClick={() => setTone('friendly')}
+              >
+                Friendly
+              </button>
+              <button
+                className={`flex-1 py-2 text-xs rounded-lg font-semibold border transition-all duration-200 ${tone === 'neutral' ? 'bg-blue-100 border-blue-400 text-blue-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+                onClick={() => setTone('neutral')}
+              >
+                Neutral
+              </button>
+              <button
+                className={`flex-1 py-2 text-xs rounded-lg font-semibold border transition-all duration-200 ${tone === 'professional' ? 'bg-blue-100 border-blue-400 text-blue-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+                onClick={() => setTone('professional')}
+              >
+                Professional
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="relative z-10 p-6">
         {!userData ? (
           <div className="flex flex-col items-center justify-center text-center space-y-6">

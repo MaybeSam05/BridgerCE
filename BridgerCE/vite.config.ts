@@ -13,12 +13,6 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: 'copy-service-worker',
-      closeBundle: () => {
-        copyFileSync('service-worker.js', 'dist/service-worker.js');
-      }
-    },
-    {
       name: 'copy-content-script',
       closeBundle: () => {
         copyFileSync('contentScript.js', 'dist/contentScript.js');
