@@ -32,11 +32,14 @@ function App() {
   const [outputLength, setOutputLength] = useState<number>(150);
   const [tone, setTone] = useState<'neutral' | 'friendly' | 'professional'>('neutral');
 
+  // Additional context state
+  const [additionalContext, setAdditionalContext] = useState<string>("");
+
   // Prompts for each tone
   const tonePrompts: Record<string, string> = {
-    neutral: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional but friendly and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Connecting Around HealthTech & Stanford//Hi Jamie, I saw we both worked in healthtech and studied at Stanford... \n\nNow generate the email based on the profiles provided.`,
-    friendly: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nYou're helping draft a warm, friendly, and approachable email for a 15-minute coffee chat. The tone should be upbeat, personable, and inviting, while still being respectful and professional. Use first names, express genuine interest, and make the recipient feel at ease. Keep it light and positive, and mention any shared interests or experiences early in the message. Avoid overly formal language, and aim for a conversational style.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone friendly, upbeat, and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Coffee Chat About Product Design//Hi Taylor, I noticed we both have a passion for product design and went to similar schools... \n\nNow generate the email based on the profiles provided.`,
-    professional: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nYou're helping draft a highly professional and respectful email for a 15-minute coffee chat. The tone should be formal, courteous, and focused on career development. Use full names, reference the recipient’s professional achievements, and maintain a clear, concise structure. Avoid casual language, and emphasize the value of learning from the recipient’s experience. The message should be polished and businesslike, while still expressing genuine interest in connecting.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a respectful, formal, and concise email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional, polished, and thoughtful — avoid anything generic or overly casual.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Professional Networking Opportunity//Dear Dr. Smith, I am reaching out after seeing your impressive work in... \n\nNow generate the email based on the profiles provided.`
+    neutral: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional but friendly and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Connecting Around HealthTech & Stanford//Hi Jamie, I saw we both worked in healthtech and studied at Stanford... \n\nNow generate the email based on the profiles provided.`,
+    friendly: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nYou're helping draft a warm, friendly, and approachable email for a 15-minute coffee chat. The tone should be upbeat, personable, and inviting, while still being respectful and professional. Use first names, express genuine interest, and make the recipient feel at ease. Keep it light and positive, and mention any shared interests or experiences early in the message. Avoid overly formal language, and aim for a conversational style.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone friendly, upbeat, and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Coffee Chat About Product Design//Hi Taylor, I noticed we both have a passion for product design and went to similar schools... \n\nNow generate the email based on the profiles provided.`,
+    professional: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nYou're helping draft a highly professional and respectful email for a 15-minute coffee chat. The tone should be formal, courteous, and focused on career development. Use full names, reference the recipient’s professional achievements, and maintain a clear, concise structure. Avoid casual language, and emphasize the value of learning from the recipient’s experience. The message should be polished and businesslike, while still expressing genuine interest in connecting.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a respectful, formal, and concise email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional, polished, and thoughtful — avoid anything generic or overly casual.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Professional Networking Opportunity//Dear Dr. Smith, I am reaching out after seeing your impressive work in... \n\nNow generate the email based on the profiles provided.`
   };
 
   // Load stored user data when component mounts
@@ -200,31 +203,67 @@ function App() {
             }
             console.log("First 200 characters:", extractedText.substring(0, 200));
             
-            // Save to userTXT in userData
-            chrome.storage.local.get(["userData"], (result) => {
-              const userData = result.userData || {};
-              userData.userTXT = extractedText;
-              chrome.storage.local.set({ userData }, () => {
-                if (chrome.runtime.lastError) {
-                  console.error("Storage error:", chrome.runtime.lastError);
-                  setSetUserInfoStatus("error");
-                  setSetUserInfoMsg("Failed to save user data");
-                } else {
-                  console.log("Successfully saved user data to storage");
-                  setSetUserInfoStatus("success");
-                  setSetUserInfoMsg("User data saved!");
-                  setHasUserTXT(true);
-                  // Update local state
-                  setUserData((prev) => prev ? ({ ...prev, userTXT: extractedText }) : null);
-                  
-                  // Clear success message after 2 seconds
-                  setTimeout(() => {
-                    setSetUserInfoStatus(null);
-                    setSetUserInfoMsg("");
-                  }, 2000);
+            // Clean up the extracted text using OpenAI API before saving
+            (async () => {
+              try {
+                setSetUserInfoStatus(null);
+                setSetUserInfoMsg("Cleaning up profile text...");
+                const cleanPrompt = `You are a helpful assistant. Clean up the following LinkedIn profile text for use as input to another AI. Remove any extraneous formatting, repeated sections, navigation, or irrelevant content. Only keep the main professional summary, experience, education, and skills. Output only the cleaned text, nothing else.\n\nProfile Text:\n${extractedText}`;
+                const cleanResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${config.OPENAI_API_KEY}`
+                  },
+                  body: JSON.stringify({
+                    model: config.CHATGPT_MODEL,
+                    messages: [
+                      { role: "system", content: "You are a helpful assistant that cleans up LinkedIn profile text." },
+                      { role: "user", content: cleanPrompt }
+                    ],
+                    max_tokens: 2000,
+                    temperature: 0.2
+                  })
+                });
+                if (!cleanResponse.ok) {
+                  const errorText = await cleanResponse.text();
+                  throw new Error(`OpenAI API error: ${cleanResponse.status} - ${errorText}`);
                 }
-              });
-            });
+                const cleanData = await cleanResponse.json();
+                const cleanedText = cleanData.choices?.[0]?.message?.content?.trim();
+                if (!cleanedText) {
+                  throw new Error("No cleaned text returned from OpenAI");
+                }
+                // Save cleaned text to userTXT in userData
+                chrome.storage.local.get(["userData"], (result) => {
+                  const userData = result.userData || {};
+                  userData.userTXT = cleanedText;
+                  chrome.storage.local.set({ userData }, () => {
+                    if (chrome.runtime.lastError) {
+                      console.error("Storage error:", chrome.runtime.lastError);
+                      setSetUserInfoStatus("error");
+                      setSetUserInfoMsg("Failed to save user data");
+                    } else {
+                      console.log("Successfully saved cleaned user data to storage");
+                      setSetUserInfoStatus("success");
+                      setSetUserInfoMsg("User data saved!");
+                      setHasUserTXT(true);
+                      // Update local state
+                      setUserData((prev) => prev ? ({ ...prev, userTXT: cleanedText }) : null);
+                      // Clear success message after 2 seconds
+                      setTimeout(() => {
+                        setSetUserInfoStatus(null);
+                        setSetUserInfoMsg("");
+                      }, 2000);
+                    }
+                  });
+                });
+              } catch (err) {
+                console.error("Error cleaning up profile text:", err);
+                setSetUserInfoStatus("error");
+                setSetUserInfoMsg("Failed to clean up profile text");
+              }
+            })();
           });
         }, 500); // Wait 500ms for script to initialize
       });
@@ -304,7 +343,11 @@ function App() {
             try {
               setConnectionDataMsg("Generating email...");
               
-              const context_prompt = tonePrompts[tone].replace('{clientTXT}', clientTXT);
+              let context_prompt = tonePrompts[tone].replace('{clientTXT}', clientTXT);
+              // Append additional context if provided
+              if (additionalContext.trim()) {
+                context_prompt += `\n\nAdditional Context: ${additionalContext.trim()}`;
+              }
               
               console.log("Sending request to ChatGPT API...");
               console.log("Request payload:", {
@@ -563,8 +606,8 @@ function App() {
             <label className="block text-sm font-medium text-slate-700 mb-1">Output Length ({outputLength} words)</label>
             <input
               type="range"
-              min={150}
-              max={500}
+              min={50}
+              max={200}
               value={outputLength}
               onChange={e => setOutputLength(Number(e.target.value))}
               className="w-full"
@@ -874,33 +917,43 @@ function App() {
                    connectionDataStatus === "success" ? "Email Generated!" : "Generate Connection Email"}
                 </button>
               )}
+              {/* Additional Context Box */}
+              {hasUserTXT && (
+                <div className="mt-2">
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Additional Context (optional)</label>
+                  <textarea
+                    value={additionalContext}
+                    onChange={e => setAdditionalContext(e.target.value)}
+                    rows={2}
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs resize-none shadow-sm placeholder-gray-400 text-gray-900"
+                    placeholder="e.g. Reason for reaching out, specific topics, etc."
+                  />
+                </div>
+              )}
               
               {/* Status Messages */}
+              {/* Only show status messages for errors and warnings, not for success after saving user data */}
               {(setUserInfoMsg || connectionDataMsg) && (
-                <div className={`p-3 rounded-xl text-xs flex items-start gap-2 shadow-sm ${
-                  (setUserInfoStatus === "error" || connectionDataStatus === "error") 
-                    ? "bg-red-50 text-red-700 border border-red-200" 
-                    : (setUserInfoStatus === "notLinkedIn" || connectionDataStatus === "notLinkedIn")
-                      ? "bg-amber-50 text-amber-700 border border-amber-200"
-                      : "bg-green-50 text-green-700 border border-green-200"
-                }`}>
-                  {(setUserInfoStatus === "error" || connectionDataStatus === "error") ? (
-                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  ) : (setUserInfoStatus === "notLinkedIn" || connectionDataStatus === "notLinkedIn") ? (
-                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                  <span className="break-words leading-relaxed">
-                    {setUserInfoMsg || connectionDataMsg}
-                  </span>
-                </div>
+                ((setUserInfoStatus === "error" || setUserInfoStatus === "notLinkedIn") || (connectionDataStatus === "error" || connectionDataStatus === "notLinkedIn")) && (
+                  <div className={`p-3 rounded-xl text-xs flex items-start gap-2 shadow-sm ${
+                    (setUserInfoStatus === "error" || connectionDataStatus === "error") 
+                      ? "bg-red-50 text-red-700 border border-red-200" 
+                      : "bg-amber-50 text-amber-700 border border-amber-200"
+                  }`}>
+                    {(setUserInfoStatus === "error" || connectionDataStatus === "error") ? (
+                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    )}
+                    <span className="break-words leading-relaxed">
+                      {setUserInfoMsg || connectionDataMsg}
+                    </span>
+                  </div>
+                )
               )}
               
               {/* Logout Button */}
