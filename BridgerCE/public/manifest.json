@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Bridger - LinkedIn Connection Automater",
-    "version": "1.1",
+    "version": "1.1.1",
     "description": "Bridger is an AI-powered LinkedIn networking assistant that helps send personalized messages to build meaningful connections.",
     "icons": {
       "16": "icon16.png",

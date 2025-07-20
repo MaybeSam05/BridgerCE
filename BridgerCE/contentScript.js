@@ -60,7 +60,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
 
       // Clean up the text: remove excessive whitespace
-      const cleanedText = bodyText.slice(250, bodyText.length - 200);
+      const cleanedText = bodyText.slice(200, bodyText.length - 200);
 
       // Get the first 200 characters of cleaned text
       const first200Chars = cleanedText.substring(0, 200);

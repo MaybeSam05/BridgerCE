@@ -19,7 +19,7 @@ export async function authenticateUser(): Promise<void> {
       ]
     }, async (token) => {
       if (chrome.runtime.lastError || !token) {
-        console.error("Auth Error:", chrome.runtime.lastError);
+        console.error("Auth Error:", chrome.runtime.lastError?.message || chrome.runtime.lastError);
         return;
       }
   
@@ -59,7 +59,7 @@ export async function authenticateUser(): Promise<void> {
         
         chrome.storage.local.set({ userData }, () => {
           if (chrome.runtime.lastError) {
-            console.error("Error saving to storage:", chrome.runtime.lastError);
+            console.error("Error saving to storage:", chrome.runtime.lastError?.message || chrome.runtime.lastError);
           } else {
             console.log("User data saved to Chrome storage successfully!");
           }
@@ -82,7 +82,7 @@ export function getStoredUserData(): Promise<{
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(['userData'], (result) => {
       if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
+        reject(new Error(chrome.runtime.lastError?.message || 'Unknown storage error'));
       } else {
         resolve(result.userData || null);
       }
@@ -95,7 +95,7 @@ export function clearStoredUserData(): Promise<void> {
   return new Promise((resolve, reject) => {
     chrome.storage.local.remove(['userData'], () => {
       if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
+        reject(new Error(chrome.runtime.lastError?.message || 'Unknown storage error'));
       } else {
         console.log("User data cleared from storage");
         resolve();

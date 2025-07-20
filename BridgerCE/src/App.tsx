@@ -37,9 +37,9 @@ function App() {
 
   // Prompts for each tone
   const tonePrompts: Record<string, string> = {
-    neutral: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional but friendly and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Connecting Around HealthTech & Stanford//Hi Jamie, I saw we both worked in healthtech and studied at Stanford... \n\nNow generate the email based on the profiles provided.`,
-    friendly: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nYou're helping draft a warm, friendly, and approachable email for a 15-minute coffee chat. The tone should be upbeat, personable, and inviting, while still being respectful and professional. Use first names, express genuine interest, and make the recipient feel at ease. Keep it light and positive, and mention any shared interests or experiences early in the message. Avoid overly formal language, and aim for a conversational style.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone friendly, upbeat, and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Coffee Chat About Product Design//Hi Taylor, I noticed we both have a passion for product design and went to similar schools... \n\nNow generate the email based on the profiles provided.`,
-    professional: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nYou're helping draft a highly professional and respectful email for a 15-minute coffee chat. The tone should be formal, courteous, and focused on career development. Use full names, reference the recipient’s professional achievements, and maintain a clear, concise structure. Avoid casual language, and emphasize the value of learning from the recipient’s experience. The message should be polished and businesslike, while still expressing genuine interest in connecting.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a respectful, formal, and concise email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional, polished, and thoughtful — avoid anything generic or overly casual.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nExample: Professional Networking Opportunity//Dear Dr. Smith, I am reaching out after seeing your impressive work in... \n\nNow generate the email based on the profiles provided.`
+    neutral: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nPlease compose a professional email requesting a 15-minute virtual coffee chat.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional but friendly and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nIMPORTANT: Include proper line breaks in the email body for readability. Use \\n for line breaks between paragraphs and sections.\n\nExample: Coffee Chat Request//Hi [client name],\\n\\nI hope you're doing well! My name is [user name], and I'm currently studying [major] at [college]. I came across your profile on LinkedIn and was really impressed by your [career] journey at massive companies like [company] and [company].\\n\\nAs someone who's hoping to build a career in similar fields, I feel like I could learn a lot from your journey, especially how you've navigated through different roles and [areas]. I'd be so grateful for the chance to hear about your path, what you enjoy most about your work, and any advice you might have for someone starting out.\\n\\nI'm sure you're incredibly busy, but if you do have 15 minutes to connect, I'm free at the following times: [times]. If none of those work, just let me know what does and I'll make it work.\\n\\nThanks so much for considering! Really looking forward to the possibility of chatting with you!\\n\\nBest,\\n[name]\n\nNow generate the email based on the profiles provided.`,
+    friendly: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nYou're helping draft a warm, friendly, and approachable email for a 15-minute coffee chat. The tone should be upbeat, personable, and inviting, while still being respectful and professional. Use first names, express genuine interest, and make the recipient feel at ease. Keep it light and positive, and mention any shared interests or experiences early in the message. Avoid overly formal language, and aim for a conversational style.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a warm, authentic, and respectful email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone friendly, upbeat, and thoughtful — avoid anything generic or overly formal.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nIMPORTANT: Include proper line breaks in the email body for readability. Use \\n for line breaks between paragraphs and sections.\n\nExample: Coffee Chat About Product Design//Hi Taylor,\\n\\nI noticed we both have a passion for product design and went to similar schools. I'd love to connect and learn from your experience!\\n\\nBest,\\n[name]\n\nNow generate the email based on the profiles provided.`,
+    professional: `You are a professional email assistant. I will provide two LinkedIn profiles: one is mine, and one belongs to someone I’d like to connect with.\n\nMy LinkedIn Profile:\n${userData?.userTXT || ''}\n\nTheir LinkedIn Profile:\n{clientTXT}\n\nMAX WORD COUNT: ${outputLength + 5}. DO NOT GO ABOVE THIS WORD COUNT\n\nYou're helping draft a highly professional and respectful email for a 15-minute coffee chat. The tone should be formal, courteous, and focused on career development. Use full names, reference the recipient’s professional achievements, and maintain a clear, concise structure. Avoid casual language, and emphasize the value of learning from the recipient’s experience. The message should be polished and businesslike, while still expressing genuine interest in connecting.\n\nYour Task:\n\nCarefully analyze both profiles.\nIdentify specific, genuine points of connection (e.g. shared schools, roles, industries, skills, locations, or interests).\nUse those connections to craft a respectful, formal, and concise email requesting a 15-minute virtual coffee chat.\nMention the relevant connection or shared interest early in the message to build rapport.\nKeep the tone professional, polished, and thoughtful — avoid anything generic or overly casual.\nEnsure the email is under ${outputLength} words.\nDo not use any information beyond what is included in the profiles and context prompt.\n\nIMPORTANT OUTPUT FORMAT:\nYou must return your response in this exact format:\nsubject line here//email body here\n\nDo NOT add explanations, headers, or introductions.\nDO NOT include any em dashes or other special characters.\nDO NOT include anything before or after the response.\nDO NOT wrap the response in quotes or code blocks.\nDO NOT include any labels like "Subject:" or "Body:"\n\nIMPORTANT: Include proper line breaks in the email body for readability. Use \\n for line breaks between paragraphs and sections.\n\nExample: Professional Networking Opportunity//Dear Dr. Smith,\\n\\nI am reaching out after seeing your impressive work in the field. I would appreciate the opportunity to connect and learn from your expertise.\\n\\nBest regards,\\n[name]\n\nNow generate the email based on the profiles provided.`
   };
 
   // Load stored user data when component mounts
@@ -55,6 +55,20 @@ function App() {
       .catch((error) => {
         console.error("Error loading stored data:", error);
       });
+
+    // Load stored email data
+    chrome.storage.local.get(["emailData", "emailAddress", "isComposingEmail"], (result) => {
+      if (result.emailData) {
+        setEmailData(result.emailData);
+        console.log("Loaded stored email data:", result.emailData);
+      }
+      if (result.emailAddress) {
+        setEmailAddress(result.emailAddress);
+      }
+      if (result.isComposingEmail) {
+        setIsComposingEmail(true);
+      }
+    });
   }, []);
 
   // ... keep existing code (all handler functions - handleAuthClick, handleLogout, handleResetUserData, handleSetUserInfo, handleGetConnectionData, handleSendEmail, formatEmailBody, handleBackToMain)
@@ -431,6 +445,9 @@ function App() {
               setConnectionDataMsg("Email generated successfully!");
               setIsComposingEmail(true);
               
+              // Save email data to storage
+              saveEmailDataToStorage({ subject, body: formattedBody }, "", true);
+              
               // Clear success message after 2 seconds
               setTimeout(() => {
                 setConnectionDataStatus(null);
@@ -517,6 +534,7 @@ function App() {
         setEmailAddress("");
         setSendEmailStatus(null);
         setSendEmailMsg("");
+        clearEmailDataFromStorage();
       }, 2000);
       
     } catch (error: unknown) {
@@ -528,26 +546,39 @@ function App() {
 
   // Helper function to format email body with proper line breaks
   const formatEmailBody = (body: string): string => {
-    let formattedBody = body;
-    
-    // Find the first comma and add newline after it
-    const firstCommaIndex = formattedBody.indexOf(',');
-    if (firstCommaIndex !== -1) {
-      formattedBody = formattedBody.substring(0, firstCommaIndex + 1) + '\n\n' + formattedBody.substring(firstCommaIndex + 1);
-    }
-    
-    // Find the last comma and add newline before and after it
-    const lastCommaIndex = formattedBody.lastIndexOf(',');
-    if (lastCommaIndex !== -1 && lastCommaIndex !== firstCommaIndex) {
-      // Get the word after the last comma
-      const afterComma = formattedBody.substring(lastCommaIndex + 1).trim();
-      const beforeComma = formattedBody.substring(0, lastCommaIndex);
-      
-      // Reconstruct with newlines around the last comma
-      formattedBody = beforeComma + '\n\n' + afterComma;
-    }
-    
-    return formattedBody;
+    // Convert escaped newlines to actual newlines and ensure proper formatting
+    return body
+      .replace(/\\n/g, '\n')  // Convert escaped newlines
+      .replace(/\\r\\n/g, '\n')  // Convert Windows line endings
+      .replace(/\\r/g, '\n')  // Convert carriage returns
+      .replace(/\n{3,}/g, '\n\n')  // Limit consecutive newlines to max 2
+      .trim();  // Remove leading/trailing whitespace
+  };
+
+  // Helper function to save email data to storage
+  const saveEmailDataToStorage = (emailData: {subject: string, body: string} | null, emailAddress: string, isComposing: boolean) => {
+    chrome.storage.local.set({
+      emailData: emailData,
+      emailAddress: emailAddress,
+      isComposingEmail: isComposing
+    }, () => {
+      if (chrome.runtime.lastError) {
+        console.error("Storage error:", chrome.runtime.lastError);
+      } else {
+        console.log("Email data saved to storage");
+      }
+    });
+  };
+
+  // Helper function to clear email data from storage
+  const clearEmailDataFromStorage = () => {
+    chrome.storage.local.remove(["emailData", "emailAddress", "isComposingEmail"], () => {
+      if (chrome.runtime.lastError) {
+        console.error("Storage error:", chrome.runtime.lastError);
+      } else {
+        console.log("Email data cleared from storage");
+      }
+    });
   };
 
   // Handler to go back to main view
@@ -557,6 +588,7 @@ function App() {
     setEmailAddress("");
     setSendEmailStatus(null);
     setSendEmailMsg("");
+    clearEmailDataFromStorage();
   };
 
   // Handler for copying email body to clipboard
@@ -701,7 +733,10 @@ function App() {
                 <input
                   type="email"
                   value={emailAddress}
-                  onChange={(e) => setEmailAddress(e.target.value)}
+                  onChange={(e) => {
+                    setEmailAddress(e.target.value);
+                    saveEmailDataToStorage(emailData, e.target.value, true);
+                  }}
                   placeholder="colleague@company.com"
                   className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm placeholder-gray-400 shadow-sm text-gray-900"
                 />
@@ -715,7 +750,11 @@ function App() {
                 <input
                   type="text"
                   value={emailData?.subject || ""}
-                  onChange={(e) => setEmailData(prev => prev ? {...prev, subject: e.target.value} : null)}
+                  onChange={(e) => {
+                    const newEmailData = emailData ? {...emailData, subject: e.target.value} : null;
+                    setEmailData(newEmailData);
+                    saveEmailDataToStorage(newEmailData, emailAddress, true);
+                  }}
                   className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm shadow-sm text-gray-900"
                 />
               </div>
@@ -728,7 +767,11 @@ function App() {
                 <div className="relative">
                   <textarea
                     value={emailData?.body || ""}
-                    onChange={(e) => setEmailData(prev => prev ? {...prev, body: e.target.value} : null)}
+                    onChange={(e) => {
+                      const newEmailData = emailData ? {...emailData, body: e.target.value} : null;
+                      setEmailData(newEmailData);
+                      saveEmailDataToStorage(newEmailData, emailAddress, true);
+                    }}
                     rows={5}
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm resize-none shadow-sm placeholder-gray-400 text-gray-900"
                     placeholder="Your personalized message will appear here..."
